@@ -90,11 +90,6 @@ const IdDuplicateCheckButton = styled.button`
     background-color: #FFFFFF;
     cursor: ${(props) => (props.isIdDuplicateCheckButtonEnabled ? "pointer" : "nor-allowed")};
     pointer-events: ${(props) => (props.isIdDuplicateCheckButtonEnabled ? "auto" : "none")};
-    
-    &:hover {
-        background-color: ${(props) => (props.isIdDuplicateCheckButtonEnabled ? "#D2B48C" : "#FFFFFF")};
-        color: ${(props) => (props.isIdDuplicateCheckButtonEnabled ? "#FFFFFF" : "gray")};
-    }
 `;
 
 const NicknameDuplicateCheckButton = styled.button`
@@ -111,11 +106,6 @@ const NicknameDuplicateCheckButton = styled.button`
     background-color: #FFFFFF;
     cursor: ${(props) => (props.isNicknameDuplicateCheckButtonEnabled ? "pointer" : "nor-allowed")};
     pointer-events: ${(props) => (props.isNicknameDuplicateCheckButtonEnabled ? "auto" : "none")};
-    
-    &:hover {
-        background-color: ${(props) => (props.isNicknameDuplicateCheckButtonEnabled ? "#D2B48C" : "#FFFFFF")};
-        color: ${(props) => (props.isNicknameDuplicateCheckButtonEnabled ? "#FFFFFF" : "gray")};
-    }
 `;
 
 const EmailDuplicateCheckButton = styled.button`
@@ -132,11 +122,6 @@ const EmailDuplicateCheckButton = styled.button`
     background-color: #FFFFFF;
     cursor: ${(props) => (props.isEmailDuplicateCheckButtonEnabled ? "pointer" : "nor-allowed")};
     pointer-events: ${(props) => (props.isEmailDuplicateCheckButtonEnabled ? "auto" : "none")};
-    
-    &:hover {
-        background-color: ${(props) => (props.isEmailDuplicateCheckButtonEnabled ? "#D2B48C" : "#FFFFFF")};
-        color: ${(props) => (props.isEmailDuplicateCheckButtonEnabled ? "#FFFFFF" : "gray")};
-    }
 `;
 
 const AuthenticationButton = styled.button`
