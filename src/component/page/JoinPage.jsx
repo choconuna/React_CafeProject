@@ -124,22 +124,6 @@ const EmailDuplicateCheckButton = styled.button`
     pointer-events: ${(props) => (props.isEmailDuplicateCheckButtonEnabled ? "auto" : "none")};
 `;
 
-const AuthenticationButton = styled.button`
-    flex: 1;
-    margin: 8px;
-    padding: 10px;
-    width: 150px;
-    height: 50px;
-    border: 1px solid ${(props) => (props.isEnabled ? '#D2B48C' : 'gray')};
-    border-radius: 6px;
-    font-family: 'NanumBarunGothic';
-    font-size: 15px;
-    color: ${(props) => (props.isEnabled ? '#D2B48C' : 'gray')};
-    background-color: #FFFFFF;
-    cursor: ${(props) => (props.isEnabled ? 'pointer' : 'not-allowed')};
-    pointer-events: ${(props) => (props.isEnabled ? "auto" : "none")};
-`;
-
 const Blank = styled.button`
     flex: 1;
     margin: 8px;
@@ -155,17 +139,18 @@ const Blank = styled.button`
 `;
 
 const JoinButton = styled.button`
-   margin: 8px;
-   padding: 10px;
-   width: 350px;
-   height: 50px; 
-   border: none;
-   border-radius: 6px;
-   font-family: 'NanumBarunGothic';
-   font-size: 15px;
-   color: #FFFFFF;
-   background-color: #D2B48C;
-   cursor: pointer;
+    margin: 8px;
+    padding: 10px;
+    width: 350px;
+    height: 50px; 
+    border: none;
+    border-radius: 6px;
+    font-family: 'NanumBarunGothic';
+    font-size: 15px;
+    color: #FFFFFF;
+    background-color: ${(props) => (props.disabled ? "gray" : "#D2B48C")};
+    cursor: ${(props) => (props.disabled ? "nor-allowed" : "pointer")};
+    pointer-events: ${(props) => (props.disabled ? "none" : "auto")};
 `;
 
 function JoinPage(props) {
@@ -174,6 +159,7 @@ function JoinPage(props) {
     const [isIdDuplicated, setIsIdDuplicated] = useState(false); // 아이디 중복 확인 여부 상태
     const [isIdDuplicateCheckButtonEnabled, setIsIdDuplicateCheckButtonEnabled] = useState(true); // 중복 확인 버튼 활성화 여부 상태
     const [duplicateIdMessage, setDuplicateIdMessage] = useState(""); // 중복 아이디 팝업 메시지 상태
+    const [isIdDuplicatedCheck, setIsIdDuplicatedCheck] = useState(true); // 아이디 중복 확인 버튼 클릭 후 중복 여부 상태
 
     const [password, setPassword] = useState("");
     const [checkPw, setCheckPw] = useState("");
@@ -187,15 +173,14 @@ function JoinPage(props) {
     const [isNicknameDuplicated, setIsNicknameDuplicated] = useState(false); // 닉네임 중복 확인 여부 상태
     const [isNicknameDuplicateCheckButtonEnabled, setIsNicknameDuplicateCheckButtonEnabled] = useState(true); // 중복 확인 버튼 활성화 여부 상태
     const [duplicateNicknameMessage, setDuplicateNicknameMessage] = useState(""); // 중복 닉네임 팝업 메시지 상태
-
+    const [isNicknameDuplicatedCheck, setIsNicknameDuplicatedCheck] = useState(true); // 닉네임 중복 확인 버튼 클릭 후 중복 여부 상태
 
     const [email, setEmail] = useState("");
     const [emailError, setEmailError] = useState("");
     const [isEmailDuplicated, setIsEmailDuplicated] = useState(false); // 이메일 중복 확인 여부 상태
     const [isEmailDuplicateCheckButtonEnabled, setIsEmailDuplicateCheckButtonEnabled] = useState(true);  // 중복 확인 버튼 활성화 여부 상태
     const [duplicateEmailMessage, setDuplicateEmailMessage] = useState(""); // 중복 닉네임 팝업 메시지 상태
-
-    const [phone, setPhone] = useState("");
+    const [isEmailDuplicatedCheck, setIsEmailDuplicatedCheck] = useState(true); // 이메일 중복 확인 버튼 클릭 후 중복 여부 상태
 
     const validateId = (inputId) => {
         const idRegex = /^(?=.*[a-zA-Z])(?=.*\d)[a-zA-Z\d]{6,16}$/;
@@ -205,17 +190,19 @@ function JoinPage(props) {
     // 중복 아이디 확인 함수
     const handleIdDuplicateCheck = async () => {
         try {
-            const response = await fetch(`http://localhost:3001/check-duplicate-id/${id}`);
+            const response = await fetch(`http://localhost:3000/check-duplicate-id/${id}`);
             const data = await response.json();
 
             if (data.isIdDuplicated) {
                 toast.error("사용 불가능한 아이디입니다.");
                 setIsIdDuplicated(true);
                 setIsIdDuplicateCheckButtonEnabled(true);
+                setIsIdDuplicatedCheck(true);
             } else {
                 toast.success("사용 가능한 아이디입니다.");
                 setIsIdDuplicated(false);
                 setIsIdDuplicateCheckButtonEnabled(false);
+                setIsIdDuplicatedCheck(false);
             }
         } catch (error) {
             console.error("중복 ID 확인 중 오류 발생: ", error);
@@ -226,6 +213,8 @@ function JoinPage(props) {
     const handleIdChangeForButton = (e) => {
         const newId = e.target.value;
         setId(newId);
+
+        setIsIdDuplicatedCheck(true);
 
         if (validateId(newId) || newId.length === 0) {
             setIdError("");
@@ -271,17 +260,23 @@ function JoinPage(props) {
     // 중복 닉네임 확인 함수
     const handleNicknameDuplicateCheck = async () => {
         try {
-            const response = await fetch(`http://localhost:3001/check-duplicate-id/${nickname}`);
+            const response = await fetch(`http://localhost:3000/check-duplicate-nickname/${nickname}`);
             const data = await response.json();
 
             if (data.isNicknameDuplicated) {
                 toast.error("사용 불가능한 닉네임입니다.");
                 setIsNicknameDuplicated(true);
                 setIsNicknameDuplicateCheckButtonEnabled(true);
+                setIsNicknameDuplicatedCheck(true);
+
+                console.log("isNicknameDuplicatedCheck:", isNicknameDuplicatedCheck);
             } else {
                 toast.success("사용 가능한 닉네임입니다.");
                 setIsNicknameDuplicated(false);
                 setIsNicknameDuplicateCheckButtonEnabled(false);
+                setIsNicknameDuplicatedCheck(false);
+
+                console.log("isNicknameDuplicatedCheck:", isNicknameDuplicatedCheck);
             }
         } catch (error) {
             console.error("중복 닉네임 확인 중 오류 발생: ", error);
@@ -292,6 +287,10 @@ function JoinPage(props) {
     const handleNicknameChangeForButton = (e) => {
         const newNickname = e.target.value;
         setNickname(newNickname);
+
+        setIsNicknameDuplicatedCheck(true);
+
+        console.log("isNicknameDuplicatedCheck:", isNicknameDuplicatedCheck);
 
         if (validateNickname(newNickname) || newNickname.length === 0) {
             setNicknameError("");
@@ -310,17 +309,19 @@ function JoinPage(props) {
     // 중복 이메일 확인 함수
     const handleEmailDuplicateCheck = async () => {
         try {
-            const response = await fetch(`http://localhost:3001/check-duplicate-id/${email}`);
+            const response = await fetch(`http://localhost:3000/check-duplicate-email/${email}`);
             const data = await response.json();
 
             if (data.isEmailDuplicated) {
                 toast.error("사용 불가능한 이메일입니다.");
                 setIsEmailDuplicated(true);
                 setIsEmailDuplicateCheckButtonEnabled(true);
+                setIsEmailDuplicatedCheck(true);
             } else {
                 toast.success("사용 가능한 이메일입니다.");
                 setIsEmailDuplicated(false);
                 setIsEmailDuplicateCheckButtonEnabled(false);
+                setIsEmailDuplicatedCheck(false);
             }
         } catch (error) {
             console.error("중복 이메일 확인 중 오류 발생: ", error);
@@ -332,12 +333,34 @@ function JoinPage(props) {
         const newEmail = e.target.value;
         setEmail(newEmail);
 
+        setIsEmailDuplicatedCheck(true);
+
         if (validateEmail(newEmail) || newEmail.length === 0) {
             setEmailError("");
             setIsEmailDuplicateCheckButtonEnabled(true); // 이메일 변경 시 중복 확인 버튼 활성화
         } else {
             setEmailError("이메일 형식으로 입력해 주세요.");
             setIsEmailDuplicateCheckButtonEnabled(false); // 유효하지 않은 이메일일 경우 중복 확인 버튼 비활성화
+        }
+    }
+
+    // 모든 필드가 입력되었고, 형식에 맞게 입력되었는지를 확인하는 함수
+    const isFormValid = () => {
+        const isIdValid = id.trim() !== '';
+        const isPasswordValid = password.trim() !== '';
+        const arePasswordsMatching = password === checkPw;
+        const isNameValid = name.trim() !== '';
+        const isNicknameValid = nickname.trim() !== '';
+        const isEmailValid = email.trim() !== '';
+        // 유효하지 않은 경우 false를 반환하고, 모두 유효한 경우 true를 반환
+        return isIdValid && validateId(id) && !isIdDuplicatedCheck && isPasswordValid && validatePassword(password) && !pwMismatch && arePasswordsMatching && isNameValid && isNicknameValid && validateNickname(nickname) && !isNicknameDuplicatedCheck && isEmailValid && validateEmail(email) && !isEmailDuplicatedCheck;
+    };
+
+    const handleJoin = () => {
+        if (isFormValid()) {
+
+        } else {
+
         }
     }
 
@@ -444,24 +467,9 @@ function JoinPage(props) {
                 )}
                 {/* Toast 메시지 컨테이너 */}
                 <ToastContainer position="bottom-center" autoClose={3000} />
-                <LineForm>
-                    <ExplanationText style={{ alignItems: 'right' }}><p style={{ marginRight: '2px' }}>휴대폰</p><p style={{ color: '#FF0000', marginRight: '10px' }}>*</p><p style={{ color: 'transparent', marginRight: '2px' }}>오확인</p></ExplanationText>
-                    <TextInput
-                        type="text"
-                        placeholder="숫자만 입력해 주세요."
-                        value={phone}
-                        onChange={(e) => {
-                            const inputNumber = e.target.value.replace(/[^0-9]/g, ''); // 숫자 이외의 문자 제거
-                            setPhone(inputNumber.slice(0, 11)); // 11자리까지만 유지
-                        }}
-                    />
-                    <AuthenticationButton
-                        isEnabled={phone.length > 0}
-                        onClick={() => {
-
-                        }} >인증번호 받기</AuthenticationButton>
-                </LineForm>
-                <JoinButton style={{ marginTop: '20px', marginBottom: '50px' }}>가입하기</JoinButton>
+                <JoinButton style={{ marginTop: '20px', marginBottom: '50px' }}
+                    disabled={!isFormValid()}
+                    onClick={handleJoin}>가입하기</JoinButton>
             </JoinMain>
         </FullHeightContainer>
     );
