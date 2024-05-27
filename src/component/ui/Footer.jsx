@@ -66,7 +66,7 @@ function Footer(props) {
                     <a href="https://github.com/choconuna" target="_blank" rel="noopener noreferrer">
                         <Icon src={gitbubIcon} alt="GitHub" />
                     </a>
-                    <a href="https://sjdv.notion.site/sjdv/750d7cde8c6f429b8ae5f31f62d4b9cc" target="_blank" rel="noopener noreferrer">
+                    <a href="https://sjdv.notion.site/750d7cde8c6f429b8ae5f31f62d4b9cc" target="_blank" rel="noopener noreferrer">
                         <Icon src={notionIcon} alt="Notion" />
                     </a>
                 </div>

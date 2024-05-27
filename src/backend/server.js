@@ -17,7 +17,9 @@ app.get('/check-duplicate-id/:userId', async(req, res) => {
         const result = await db.query('SELECT COUNT(*) AS count FROM user WHERE userId = ?', [userId]);
         
         const isIdDuplicated = result[0].count > 0;
-        res.json({ isIdDuplicated });
+        console.log("응답값: ", isIdDuplicated);
+        // res.json({ isIdDuplicated });
+        res.json({ code: "200", message: "Success", isIdDuplicated });
     } catch (error) {
         console.error("데이터베이스에서 중복 ID 확인 중 오류 발생: ", error);
         res.status(500).json({ message: "내부 서버 오류", error: error.message }); // 에러 메시지를 함께 전송

@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { useNavigate, NavLink } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import axios from 'axios';
 
 const FullHeightContainer = styled.div`
     height: 100%;
@@ -191,6 +192,7 @@ function JoinPage(props) {
     const handleIdDuplicateCheck = async () => {
         try {
             const response = await fetch(`http://localhost:3000/check-duplicate-id/${id}`);
+            console.log("서버 응답:", response); 
             const data = await response.json();
 
             if (data.isIdDuplicated) {
